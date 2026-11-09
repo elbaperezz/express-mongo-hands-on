@@ -4,17 +4,17 @@
   "description": "",
   "main": "awcodeAtlas.js",
   "scripts": {
-    "start": "node awcodeAtlas.js",
-    "start:postgres": "node awcodePostgres.js",
-    "start:mysql": "node awcodeMySQL.js",
-    "start:mysql:join": "node awcodeMySQLJoin.js",
+    "start": "node --env-file=.env awcodeAtlas.js",
+    "start:postgres": "node --env-file=.env awcodePostgres.js",
+    "start:mysql": "node --env-file=.env awcodeMySQL.js",
+    "start:mysql:join": "node --env-file=.env awcodeMySQLJoin.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Javi",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
-    "ejs": "^2.6.1",
+      "ejs": "^2.6.1",
     "express": "^4.16.3",
     "lodash": "^4.17.11",
     "mongoose": "^8.0.0",

@@ -3,9 +3,31 @@
 
   <div class="box" id="heading">
     <!-- Outputs the listTitle variable where the list's title is displayed in a header tag. -->
+    
     <h1>
       <%= listTitle %>
     </h1>
+    <% if (typeof allLists !== 'undefined' && allLists.length > 0) { %>
+  <div style="padding-bottom: 18px; text-align: center;">
+    <label for="listNav" style="color: #ffffff; font-size: 13.5px; display: block; margin-bottom: 6px; font-weight: 500;">
+      📋 Listas tareas de Elba Perez
+    </label>
+    <select id="listNav" 
+            onchange="if(this.value) window.location.href = (this.value === 'Today' ? '/' : '/' + encodeURIComponent(this.value));"
+            style="padding: 7px 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; background: #ffffff; color: #333; cursor: pointer; outline: none;">
+      <option value="">-- Selecciona o cambia de lista --</option>
+      <option value="Today" <%= listTitle === 'Today' ? 'selected' : '' %>>📅 Today</option>
+      <% allLists.forEach(function(l) { %>
+        <% if (l.name !== 'Today') { %>
+          <option value="<%= l.name %>" <%= listTitle === l.name ? 'selected' : '' %>>
+            📌 <%= l.name %>
+          </option>
+        <% } %>
+      <% }); %>
+    </select>
+  </div>
+<% } %>
+
   </div>
 
   <div class="box">

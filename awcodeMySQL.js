@@ -107,6 +107,9 @@ app.get("/", async (req, res) => {
         // 1. Buscamos o creamos la lista principal "Today" en la tabla 'lists'
         const [lists] = await pool.query("SELECT * FROM lists WHERE name = ?", ["Today"]);
         let listId;
+        
+        //Obtener todas las listas creadas para el selector
+        const [allLists] = await pool.query("SELECT name FROM lists ORDER BY name ASC");
 
         if (lists.length === 0) {
             // Si no existe, la creamos y obtenemos el nuevo ID generado (insertId)
@@ -130,7 +133,9 @@ app.get("/", async (req, res) => {
             res.redirect("/");
         } else {
             // Renderizamos la plantilla 'list.ejs' con los datos procedentes de MySQL
-            res.render("list", { listTitle: "Today", newListItems: items });
+            res.render("list", { listTitle: "Today", newListItems: items, allLists: allLists});  //Variable añadida
+
+
         }
     } catch (err) {
         console.error("Error al obtener las tareas de Today:", err);
@@ -141,6 +146,9 @@ app.get("/", async (req, res) => {
 // RUTA 2: GET /:customListName (Listas personalizadas dinámicas)
 app.get("/:customListName", async (req, res) => {
     const customListName = _.capitalize(req.params.customListName);
+    
+    // Obtener todas las listas creadas para el selector
+    const [allLists] = await pool.query("SELECT name FROM lists ORDER BY name ASC");
 
     try {
         // Buscamos si la lista personalizada ya existe en la base de datos
@@ -166,7 +174,9 @@ app.get("/:customListName", async (req, res) => {
                 "SELECT id AS _id, name FROM items WHERE list_id = ? ORDER BY id ASC",
                 [listId]
             );
-            res.render("list", { listTitle: customListName, newListItems: items });
+            const [allLists] = await pool.query("SELECT name FROM lists ORDER BY name ASC");
+
+            res.render("list", { listTitle: customListName, newListItems: items, allLists: allLists}); //variable añadida 2
         }
     } catch (err) {
         console.error("Error al buscar la lista personalizada:", err);

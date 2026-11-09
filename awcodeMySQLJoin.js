@@ -157,6 +157,9 @@ app.get("/", async (req, res) => {
     try {
         const [lists] = await pool.query("SELECT * FROM lists_join WHERE name = ?", ["Today"]);
         let listId;
+        //obtengo listas
+        const [allLists] = await pool.query("SELECT name FROM lists_join ORDER BY name ASC");
+
 
         if (lists.length === 0) {
             const [insertResult] = await pool.query("INSERT INTO lists_join (name) VALUES (?)", ["Today"]);
@@ -178,7 +181,8 @@ app.get("/", async (req, res) => {
         res.render("list", { 
             listTitle: "Today", 
             newListItems: items,
-            priorities: priorities
+            priorities: priorities,
+            allLists: allLists   //variable add
         });
     } catch (err) {
         console.error("Error en GET /:", err);
@@ -284,6 +288,7 @@ app.get("/about", (req, res) => {
 // RUTA 4: GET /:customListName (Listas personalizadas dinámicas - SIEMPRE AL FINAL)
 app.get("/:customListName", async (req, res) => {
     const customListName = _.capitalize(req.params.customListName);
+    const [allLists] = await pool.query("SELECT name FROM lists_join ORDER BY name ASC");
 
     try {
         const [lists] = await pool.query("SELECT * FROM lists_join WHERE name = ?", [customListName]);
@@ -306,7 +311,8 @@ app.get("/:customListName", async (req, res) => {
             res.render("list", { 
                 listTitle: customListName, 
                 newListItems: items,
-                priorities: priorities
+                priorities: priorities,
+                allLists: allLists   //variable añadida
             });
         }
     } catch (err) {
